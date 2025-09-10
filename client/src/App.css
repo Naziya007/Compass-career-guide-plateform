@@ -1,0 +1,50 @@
+/* App-specific styles */
+.App {
+  text-align: center;
+}
+
+/* Quiz specific styles */
+.quiz-container {
+  @apply max-w-3xl mx-auto;
+}
+
+.question-card {
+  @apply bg-white rounded-lg shadow-lg p-6 mb-6 border-l-4 border-primary-500;
+}
+
+.option-button {
+  @apply w-full text-left p-4 mb-3 border border-gray-300 rounded-lg hover:bg-primary-50 hover:border-primary-300 transition-all duration-200;
+}
+
+.option-button.selected {
+  @apply bg-primary-100 border-primary-500;
+}
+
+/* Dashboard styles */
+.recommendation-card {
+  @apply bg-gradient-to-r from-primary-50 to-secondary-50 rounded-lg p-6 shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200;
+}
+
+.career-path-item {
+  @apply flex items-center justify-between p-4 bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition-shadow duration-200;
+}
+
+/* Profile styles */
+.profile-section {
+  @apply bg-white rounded-lg shadow-md p-6 mb-6 border border-gray-200;
+}
+
+.tag-badge {
+  @apply inline-block bg-primary-100 text-primary-800 text-sm font-medium px-3 py-1 rounded-full mr-2 mb-2;
+}
+
+/* Responsive design helpers */
+@media (max-width: 768px) {
+  .container {
+    @apply px-2;
+  }
+  
+  .question-card {
+    @apply p-4;
+  }
+}
