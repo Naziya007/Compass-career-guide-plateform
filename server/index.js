@@ -39,7 +39,7 @@ app.get('/', (req, res) => {
   });
 });
 
-// API Routes (to be added)
+// API Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/users', require('./routes/users'));
 app.use('/api/quiz', require('./routes/quiz'));
@@ -53,7 +53,7 @@ app.use((err, req, res, next) => {
 });
 
 // 404 handler
-app.use('*', (req, res) => {
+app.use((req, res) => {
   res.status(404).json({ message: 'Route not found' });
 });
 
