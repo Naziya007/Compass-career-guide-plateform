@@ -17,36 +17,27 @@ router.get('/questions', async (req, res) => {
     const { category, limit = 20, difficulty } = req.query;
     let query = { isActive: true };
     
-    if (category) {
-      query.category = category;
-    }
-    if (difficulty) {
-      query.difficulty = difficulty;
-    }
+    if (category) query.category = category;
+    if (difficulty) query.difficulty = difficulty;
+
+    let questions;
     if (!category) {
-      const questions = await Question.getBalancedQuiz(['aptitude', 'interest', 'personality'], 7);
+      questions = await Question.getBalancedQuiz(['aptitude', 'interest', 'personality'], 7);
+      console.log('Aggregated questions:', JSON.stringify(questions, null, 2));
       const flatQuestions = questions.flatMap(cat => cat.questions).slice(0, parseInt(limit));
-      
-      return res.json({
-        success: true,
-        count: flatQuestions.length,
-        questions: flatQuestions
-      });
+      console.log('Flat questions:', flatQuestions.length);
+      return res.json({ success: true, count: flatQuestions.length, questions: flatQuestions });
     }
-    const questions = await Question.find(query).limit(parseInt(limit));
-    res.json({
-      success: true,
-      count: questions.length,
-      questions
-    });
+
+    questions = await Question.find(query).limit(parseInt(limit));
+    console.log('Filtered questions:', questions.length);
+    res.json({ success: true, count: questions.length, questions });
   } catch (error) {
     console.error('Error fetching questions:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Server error'
-    });
+    res.status(500).json({ success: false, message: 'Server error' });
   }
 });
+
 
 // @route   POST /api/quiz/submit
 // @desc    Submit quiz responses and calculate results

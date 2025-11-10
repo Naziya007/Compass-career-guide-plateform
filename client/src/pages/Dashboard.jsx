@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext';
 import { recommendationsAPI, apiUtils } from '../services/api';
 import { Radar, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, ResponsiveContainer, Tooltip } from 'recharts';
 import { Link } from 'react-router-dom';
-import Navbar from '../components/Navbar'; // Make sure this path is correct
+import Navbar from '../components/Navbar';
 
 const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
@@ -11,65 +11,30 @@ const Dashboard = () => {
   const [fetchLoading, setFetchLoading] = useState(true);
   const [fetchError, setFetchError] = useState(null);
 
-  // Updated color functions to match the new green/purple theme
-  const getScoreColor = (score) => {
-    return 'bg-green-500';
-  };
-
-  const getScoreTextColor = (score) => {
-     return 'text-green-400';
-  };
+  const getScoreColor = (score) => 'bg-green-500';
+  const getScoreTextColor = (score) => 'text-green-400';
 
   useEffect(() => {
     const fetchRecommendations = async () => {
-      if (user) {
-        try {
-          // Mocking the API response for demonstration purposes
-          // In a real app, you would use your actual API call:
-          const res = await recommendationsAPI.getUserRecommendations(user._id);
-          setRecommendations(res.data);
-          
-          // MOCK DATA START
-          // const mockData = {
-          //   geminiInsights: {
-          //     careerSuggestions: "Based on your strong analytical and creative skills, you are well-suited for roles in Data Science or UX/UI Design. These fields will leverage your problem-solving abilities while allowing you to innovate."
-          //   },
-          //   interestTags: [
-          //     { tag: 'analytical-thinking', score: 85 },
-          //     { tag: 'creative-problem-solving', score: 92 },
-          //     { tag: 'technical-aptitude', score: 78 },
-          //     { tag: 'collaboration', score: 65 },
-          //     { tag: 'leadership', score: 55 },
-          //   ],
-          //   recommendations: {
-          //     courses: [
-          //       { stream: "Science Stream", course: "Computer Science", confidence: 90 },
-          //       { stream: "Design Stream", course: "Human-Computer Interaction", confidence: 85 },
-          //     ],
-          //     careerPaths: [
-          //       { career: "Data Scientist", compatibility: 92 },
-          //       { career: "UX/UI Designer", compatibility: 88 },
-          //       { career: "Software Engineer", compatibility: 80 },
-          //     ]
-          //   }
-          // };
-          // setRecommendations(mockData);
-          // MOCK DATA END
+      if (!user) return;
 
-        } catch (err) {
-          console.error('Failed to fetch recommendations:', err);
-          const errorInfo = apiUtils.handleError(err);
-          setFetchError(errorInfo.message || 'Failed to load recommendations. Please try again.');
-        } finally {
-          setFetchLoading(false);
-        }
+      const userId = user._id || user.id; // Make sure correct ID is used
+      try {
+        setFetchLoading(true);
+        const res = await recommendationsAPI.getUserRecommendations(userId);
+        setRecommendations(res.data); // backend se directly geminiInsights aur recommendations aa rahe hain
+      } catch (err) {
+        console.error('Failed to fetch recommendations:', err);
+        const errorInfo = apiUtils.handleError(err);
+        setFetchError(errorInfo.message || 'Failed to load recommendations. Please try again.');
+      } finally {
+        setFetchLoading(false);
       }
     };
 
-    if (!authLoading) {
-      fetchRecommendations();
-    }
+    if (!authLoading) fetchRecommendations();
   }, [user, authLoading]);
+
 
   if (authLoading || fetchLoading) {
     return (

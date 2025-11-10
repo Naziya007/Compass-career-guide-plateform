@@ -66,7 +66,8 @@ export const AuthProvider = ({ children }) => {
       
       setUser(userData);
       setIsAuthenticated(true);
-      
+      console.log(user);
+
       return apiUtils.formatResponse(response);
     } catch (error) {
       const errorInfo = apiUtils.handleError(error);
