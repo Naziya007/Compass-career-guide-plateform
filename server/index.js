@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const path = require("path"); 
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
@@ -13,6 +14,16 @@ app.use(cors());
 app.use(morgan('combined'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+// ✅ Serve frontend build files
+const clientBuildPath = path.join(__dirname, "../client/dist");
+app.use(express.static(clientBuildPath));
+
+// ✅ Serve index.html for all other routes
+app.get(/.*/, (req, res) => {
+  res.sendFile(path.join(clientBuildPath, "index.html"));
+});
+
 
 // MongoDB Connection
 const connectDB = async () => {
